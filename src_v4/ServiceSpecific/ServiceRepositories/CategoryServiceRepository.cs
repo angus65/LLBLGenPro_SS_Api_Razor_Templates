@@ -26,8 +26,6 @@ namespace Northwind.Data.ServiceRepositories
         partial void OnCreateRepository();
         partial void OnBeforeFetchCategoryPkRequest(IDataAccessAdapter adapter, CategoryPkRequest request, CategoryEntity entity, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
         partial void OnAfterFetchCategoryPkRequest(IDataAccessAdapter adapter, CategoryPkRequest request, CategoryEntity entity, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
-        partial void OnBeforeFetchCategoryUcCategoryNameRequest(IDataAccessAdapter adapter, CategoryUcCategoryNameRequest request, CategoryEntity entity, IPredicateExpression predicate, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
-        partial void OnAfterFetchCategoryUcCategoryNameRequest(IDataAccessAdapter adapter, CategoryUcCategoryNameRequest request, CategoryEntity entity, IPredicateExpression predicate, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
 
         partial void OnBeforeFetchCategoryQueryCollectionRequest(IDataAccessAdapter adapter, CategoryQueryCollectionRequest request, SortExpression sortExpression, ExcludeIncludeFieldsList excludedIncludedFields, IPrefetchPath2 prefetchPath, IRelationPredicateBucket predicateBucket, int pageNumber, int pageSize, int limit);
         partial void OnAfterFetchCategoryQueryCollectionRequest(IDataAccessAdapter adapter, CategoryQueryCollectionRequest request, EntityCollection<CategoryEntity> entities, SortExpression sortExpression, ExcludeIncludeFieldsList excludedIncludedFields, IPrefetchPath2 prefetchPath, IRelationPredicateBucket predicateBucket, int pageNumber, int pageSize, int limit, int totalItemCount);
@@ -184,29 +182,6 @@ namespace Northwind.Data.ServiceRepositories
             return response;            
         }
 
-        public CategoryResponse Fetch(CategoryUcCategoryNameRequest request)
-        {
-            var entity = new CategoryEntity();
-            entity.CategoryName = request.CategoryName;
-
-            var excludedIncludedFields = RepositoryHelper.ConvertStringToExcludedIncludedFields(EntityType, request.Select);
-            var prefetchPath = RepositoryHelper.ConvertStringToPrefetchPath(EntityType, request.Include, request.Select);
-
-            using (var adapter = DataAccessAdapterFactory.NewDataAccessAdapter())
-            {
-                var ucPredicate = entity.ConstructFilterForUCCategoryName();
-                OnBeforeFetchCategoryUcCategoryNameRequest(adapter, request, entity, ucPredicate, prefetchPath, excludedIncludedFields);
-                
-                entity = base.Fetch(adapter, ucPredicate, prefetchPath, excludedIncludedFields, request.RCache);
-                if (entity != null)
-                {
-                    OnAfterFetchCategoryUcCategoryNameRequest(adapter, request, entity, ucPredicate, prefetchPath, excludedIncludedFields);
-                    return new CategoryResponse(entity.ToDto());
-                }
-            }
-            return new CategoryResponse(null);
-        }
-        
 
         public CategoryResponse Fetch(CategoryPkRequest request)
         {
@@ -295,10 +270,6 @@ namespace Northwind.Data.ServiceRepositories
                 if (map == null)
                 {
                     map = new Dictionary< string, IEntityField2[] >();
-                    map.Add("categoryname", new IEntityField2[]
-                        {
-                            CategoryFields.CategoryName,                         
-                        });
                     CacheClient.Set(UcMapCacheKey, map);
                 }
                 return map;

@@ -1,1 +1,0 @@
-.\Hosts\ConsoleHost\bin\Debug\Northwind.Data.ConsoleHost.exe

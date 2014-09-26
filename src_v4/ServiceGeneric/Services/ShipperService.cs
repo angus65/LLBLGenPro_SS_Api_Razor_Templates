@@ -17,7 +17,7 @@ namespace Northwind.Data.Services
     #region Service
     /// <summary>Service class for the entity 'Shipper'.</summary>
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalAttributes 
-	// __LLBLGENPRO_USER_CODE_REGION_END                  
+	// __LLBLGENPRO_USER_CODE_REGION_END                    
     public partial class ShipperService : ServiceBase<Shipper, IShipperServiceRepository>
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalInterfaces 
 	// __LLBLGENPRO_USER_CODE_REGION_END 
@@ -30,8 +30,6 @@ namespace Northwind.Data.Services
         partial void OnAfterPostShipperDataTableRequest(ShipperDataTableRequest request, DataTableResponse response);
         partial void OnBeforeGetShipperQueryCollectionRequest(ShipperQueryCollectionRequest request);
         partial void OnAfterGetShipperQueryCollectionRequest(ShipperQueryCollectionRequest request, ShipperCollectionResponse response);
-        partial void OnBeforeGetShipperUcShipperNameRequest(ShipperUcShipperNameRequest request);
-        partial void OnAfterGetShipperUcShipperNameRequest(ShipperUcShipperNameRequest request, ShipperResponse response);
         partial void OnBeforeGetShipperPkRequest(ShipperPkRequest request);
         partial void OnAfterGetShipperPkRequest(ShipperPkRequest request, ShipperResponse response);
 
@@ -79,23 +77,6 @@ namespace Northwind.Data.Services
             return output;
         }
 
-
-        //Unique constraint request go first (the order matters in service stack)
-        //If the PK constraint was first, it could be used by ServiceStack instead
-        //of the UC route (this is how Route order is controlled)
-        /// <summary>Gets a specific 'Shipper' based on the 'UcShipperName' unique constraint.</summary>
-        public ShipperResponse Get(ShipperUcShipperNameRequest request)
-        {
-            if(Validator != null)
-                Validator.ValidateAndThrow(new Shipper { CompanyName = request.CompanyName }, "UcShipperName");
-                
-            OnBeforeGetShipperUcShipperNameRequest(request);
-            var output = Repository.Fetch(request);
-            OnAfterGetShipperUcShipperNameRequest(request, output);
-            if (output.Result == null)
-                throw new HttpError(HttpStatusCode.NotFound, "NullReferenceException", "Shipper matching [CompanyName = {0}]  does not exist".Fmt(request.CompanyName));
-            return output;
-        }
 
 
         /// <summary>Gets a specific 'Shipper' based on it's primary key.</summary>
@@ -199,13 +180,6 @@ namespace Northwind.Data.Services
 
     }
 
-    [Route("/shippers/uc/shippername/{CompanyName}", Verbs = "GET")] // unique constraint filter
-    public partial class ShipperUcShipperNameRequest : GetRequest<Shipper, ShipperResponse>
-    {
-        // unique constraint fields (that are not also primary key fields)
-        public System.String CompanyName { get; set; }
-
-    }
 
 
     [Route("/shippers/{ShipperId}", Verbs = "GET")] // primary key filter
@@ -250,7 +224,7 @@ namespace Northwind.Data.Services
         public ShipperResponse(Shipper category) : base(category) { }
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcResponseAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
     }
 
     public partial class ShipperCollectionResponse : GetCollectionResponse<Shipper>
@@ -260,7 +234,7 @@ namespace Northwind.Data.Services
             base(collection, pageNumber, pageSize, totalItemCount){}
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcCollectionResponseAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
     }
     #endregion
 }

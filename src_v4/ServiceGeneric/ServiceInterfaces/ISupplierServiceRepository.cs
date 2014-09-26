@@ -15,7 +15,6 @@ namespace Northwind.Data.ServiceInterfaces
         SupplierCollectionResponse Fetch(SupplierQueryCollectionRequest request);
         SupplierResponse Fetch(SupplierPkRequest request);
 
-        SupplierResponse Fetch(SupplierUcSupplierNameRequest request);
 
         SupplierResponse Create(SupplierAddRequest request);
         SupplierResponse Update(SupplierUpdateRequest request);

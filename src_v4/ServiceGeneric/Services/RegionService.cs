@@ -17,7 +17,7 @@ namespace Northwind.Data.Services
     #region Service
     /// <summary>Service class for the entity 'Region'.</summary>
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalAttributes 
-	// __LLBLGENPRO_USER_CODE_REGION_END                  
+	// __LLBLGENPRO_USER_CODE_REGION_END                    
     public partial class RegionService : ServiceBase<Region, IRegionServiceRepository>
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalInterfaces 
 	// __LLBLGENPRO_USER_CODE_REGION_END 
@@ -30,8 +30,6 @@ namespace Northwind.Data.Services
         partial void OnAfterPostRegionDataTableRequest(RegionDataTableRequest request, DataTableResponse response);
         partial void OnBeforeGetRegionQueryCollectionRequest(RegionQueryCollectionRequest request);
         partial void OnAfterGetRegionQueryCollectionRequest(RegionQueryCollectionRequest request, RegionCollectionResponse response);
-        partial void OnBeforeGetRegionUcRegionDescriptionRequest(RegionUcRegionDescriptionRequest request);
-        partial void OnAfterGetRegionUcRegionDescriptionRequest(RegionUcRegionDescriptionRequest request, RegionResponse response);
         partial void OnBeforeGetRegionPkRequest(RegionPkRequest request);
         partial void OnAfterGetRegionPkRequest(RegionPkRequest request, RegionResponse response);
 
@@ -79,23 +77,6 @@ namespace Northwind.Data.Services
             return output;
         }
 
-
-        //Unique constraint request go first (the order matters in service stack)
-        //If the PK constraint was first, it could be used by ServiceStack instead
-        //of the UC route (this is how Route order is controlled)
-        /// <summary>Gets a specific 'Region' based on the 'UcRegionDescription' unique constraint.</summary>
-        public RegionResponse Get(RegionUcRegionDescriptionRequest request)
-        {
-            if(Validator != null)
-                Validator.ValidateAndThrow(new Region { RegionDescription = request.RegionDescription }, "UcRegionDescription");
-                
-            OnBeforeGetRegionUcRegionDescriptionRequest(request);
-            var output = Repository.Fetch(request);
-            OnAfterGetRegionUcRegionDescriptionRequest(request, output);
-            if (output.Result == null)
-                throw new HttpError(HttpStatusCode.NotFound, "NullReferenceException", "Region matching [RegionDescription = {0}]  does not exist".Fmt(request.RegionDescription));
-            return output;
-        }
 
 
         /// <summary>Gets a specific 'Region' based on it's primary key.</summary>
@@ -193,13 +174,6 @@ namespace Northwind.Data.Services
 
     }
 
-    [Route("/regions/uc/regiondescription/{RegionDescription}", Verbs = "GET")] // unique constraint filter
-    public partial class RegionUcRegionDescriptionRequest : GetRequest<Region, RegionResponse>
-    {
-        // unique constraint fields (that are not also primary key fields)
-        public System.String RegionDescription { get; set; }
-
-    }
 
 
     [Route("/regions/{RegionId}", Verbs = "GET")] // primary key filter
@@ -244,7 +218,7 @@ namespace Northwind.Data.Services
         public RegionResponse(Region category) : base(category) { }
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcResponseAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
     }
 
     public partial class RegionCollectionResponse : GetCollectionResponse<Region>
@@ -254,7 +228,7 @@ namespace Northwind.Data.Services
             base(collection, pageNumber, pageSize, totalItemCount){}
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcCollectionResponseAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
     }
     #endregion
 }

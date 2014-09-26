@@ -15,7 +15,6 @@ namespace Northwind.Data.ServiceInterfaces
         CategoryCollectionResponse Fetch(CategoryQueryCollectionRequest request);
         CategoryResponse Fetch(CategoryPkRequest request);
 
-        CategoryResponse Fetch(CategoryUcCategoryNameRequest request);
 
         CategoryResponse Create(CategoryAddRequest request);
         CategoryResponse Update(CategoryUpdateRequest request);

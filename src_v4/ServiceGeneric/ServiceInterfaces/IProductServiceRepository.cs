@@ -15,7 +15,6 @@ namespace Northwind.Data.ServiceInterfaces
         ProductCollectionResponse Fetch(ProductQueryCollectionRequest request);
         ProductResponse Fetch(ProductPkRequest request);
 
-        ProductResponse Fetch(ProductUcProductNameRequest request);
 
         ProductResponse Create(ProductAddRequest request);
         ProductResponse Update(ProductUpdateRequest request);

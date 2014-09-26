@@ -17,7 +17,7 @@ namespace Northwind.Data.Services
     #region Service
     /// <summary>Service class for the entity 'Category'.</summary>
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalAttributes 
-	// __LLBLGENPRO_USER_CODE_REGION_END                  
+	// __LLBLGENPRO_USER_CODE_REGION_END                    
     public partial class CategoryService : ServiceBase<Category, ICategoryServiceRepository>
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalInterfaces 
 	// __LLBLGENPRO_USER_CODE_REGION_END 
@@ -30,8 +30,6 @@ namespace Northwind.Data.Services
         partial void OnAfterPostCategoryDataTableRequest(CategoryDataTableRequest request, DataTableResponse response);
         partial void OnBeforeGetCategoryQueryCollectionRequest(CategoryQueryCollectionRequest request);
         partial void OnAfterGetCategoryQueryCollectionRequest(CategoryQueryCollectionRequest request, CategoryCollectionResponse response);
-        partial void OnBeforeGetCategoryUcCategoryNameRequest(CategoryUcCategoryNameRequest request);
-        partial void OnAfterGetCategoryUcCategoryNameRequest(CategoryUcCategoryNameRequest request, CategoryResponse response);
         partial void OnBeforeGetCategoryPkRequest(CategoryPkRequest request);
         partial void OnAfterGetCategoryPkRequest(CategoryPkRequest request, CategoryResponse response);
 
@@ -79,23 +77,6 @@ namespace Northwind.Data.Services
             return output;
         }
 
-
-        //Unique constraint request go first (the order matters in service stack)
-        //If the PK constraint was first, it could be used by ServiceStack instead
-        //of the UC route (this is how Route order is controlled)
-        /// <summary>Gets a specific 'Category' based on the 'UcCategoryName' unique constraint.</summary>
-        public CategoryResponse Get(CategoryUcCategoryNameRequest request)
-        {
-            if(Validator != null)
-                Validator.ValidateAndThrow(new Category { CategoryName = request.CategoryName }, "UcCategoryName");
-                
-            OnBeforeGetCategoryUcCategoryNameRequest(request);
-            var output = Repository.Fetch(request);
-            OnAfterGetCategoryUcCategoryNameRequest(request, output);
-            if (output.Result == null)
-                throw new HttpError(HttpStatusCode.NotFound, "NullReferenceException", "Category matching [CategoryName = {0}]  does not exist".Fmt(request.CategoryName));
-            return output;
-        }
 
 
         /// <summary>Gets a specific 'Category' based on it's primary key.</summary>
@@ -229,13 +210,6 @@ namespace Northwind.Data.Services
 
     }
 
-    [Route("/categories/uc/categoryname/{CategoryName}", Verbs = "GET")] // unique constraint filter
-    public partial class CategoryUcCategoryNameRequest : GetRequest<Category, CategoryResponse>
-    {
-        // unique constraint fields (that are not also primary key fields)
-        public System.String CategoryName { get; set; }
-
-    }
 
 
     [Route("/categories/{CategoryId}", Verbs = "GET")] // primary key filter
@@ -282,7 +256,7 @@ namespace Northwind.Data.Services
         public CategoryResponse(Category category) : base(category) { }
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcResponseAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
     }
 
     public partial class CategoryCollectionResponse : GetCollectionResponse<Category>
@@ -292,7 +266,7 @@ namespace Northwind.Data.Services
             base(collection, pageNumber, pageSize, totalItemCount){}
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcCollectionResponseAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
     }
     #endregion
 }

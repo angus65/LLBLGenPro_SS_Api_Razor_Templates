@@ -41,11 +41,6 @@ namespace Northwind.Data.Validators
                     RuleFor(y => y.ProductId).GreaterThanOrEqualTo(1);
                 });
 
-            RuleSet("UcProductName", () =>
-                {
-                    RuleFor(y => y.ProductName).NotEmpty().Length(1, 40);
-                });
-
             //Validation rules for POST requests (CREATE)
             RuleSet(ApplyTo.Post, () =>
                 {
@@ -70,7 +65,7 @@ namespace Northwind.Data.Validators
         }
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
 
     }
 }

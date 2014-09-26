@@ -17,7 +17,7 @@ namespace Northwind.Data.Services
     #region Service
     /// <summary>Service class for the entity 'Product'.</summary>
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalAttributes 
-	// __LLBLGENPRO_USER_CODE_REGION_END                  
+	// __LLBLGENPRO_USER_CODE_REGION_END                    
     public partial class ProductService : ServiceBase<Product, IProductServiceRepository>
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalInterfaces 
 	// __LLBLGENPRO_USER_CODE_REGION_END 
@@ -30,8 +30,6 @@ namespace Northwind.Data.Services
         partial void OnAfterPostProductDataTableRequest(ProductDataTableRequest request, DataTableResponse response);
         partial void OnBeforeGetProductQueryCollectionRequest(ProductQueryCollectionRequest request);
         partial void OnAfterGetProductQueryCollectionRequest(ProductQueryCollectionRequest request, ProductCollectionResponse response);
-        partial void OnBeforeGetProductUcProductNameRequest(ProductUcProductNameRequest request);
-        partial void OnAfterGetProductUcProductNameRequest(ProductUcProductNameRequest request, ProductResponse response);
         partial void OnBeforeGetProductPkRequest(ProductPkRequest request);
         partial void OnAfterGetProductPkRequest(ProductPkRequest request, ProductResponse response);
 
@@ -79,23 +77,6 @@ namespace Northwind.Data.Services
             return output;
         }
 
-
-        //Unique constraint request go first (the order matters in service stack)
-        //If the PK constraint was first, it could be used by ServiceStack instead
-        //of the UC route (this is how Route order is controlled)
-        /// <summary>Gets a specific 'Product' based on the 'UcProductName' unique constraint.</summary>
-        public ProductResponse Get(ProductUcProductNameRequest request)
-        {
-            if(Validator != null)
-                Validator.ValidateAndThrow(new Product { ProductName = request.ProductName }, "UcProductName");
-                
-            OnBeforeGetProductUcProductNameRequest(request);
-            var output = Repository.Fetch(request);
-            OnAfterGetProductUcProductNameRequest(request, output);
-            if (output.Result == null)
-                throw new HttpError(HttpStatusCode.NotFound, "NullReferenceException", "Product matching [ProductName = {0}]  does not exist".Fmt(request.ProductName));
-            return output;
-        }
 
 
         /// <summary>Gets a specific 'Product' based on it's primary key.</summary>
@@ -241,13 +222,6 @@ namespace Northwind.Data.Services
 
     }
 
-    [Route("/products/uc/productname/{ProductName}", Verbs = "GET")] // unique constraint filter
-    public partial class ProductUcProductNameRequest : GetRequest<Product, ProductResponse>
-    {
-        // unique constraint fields (that are not also primary key fields)
-        public System.String ProductName { get; set; }
-
-    }
 
 
     [Route("/products/{ProductId}", Verbs = "GET")] // primary key filter
@@ -292,7 +266,7 @@ namespace Northwind.Data.Services
         public ProductResponse(Product category) : base(category) { }
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcResponseAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
     }
 
     public partial class ProductCollectionResponse : GetCollectionResponse<Product>
@@ -302,7 +276,7 @@ namespace Northwind.Data.Services
             base(collection, pageNumber, pageSize, totalItemCount){}
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcCollectionResponseAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
     }
     #endregion
 }

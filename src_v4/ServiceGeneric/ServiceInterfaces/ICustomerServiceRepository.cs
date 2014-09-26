@@ -15,7 +15,6 @@ namespace Northwind.Data.ServiceInterfaces
         CustomerCollectionResponse Fetch(CustomerQueryCollectionRequest request);
         CustomerResponse Fetch(CustomerPkRequest request);
 
-        CustomerResponse Fetch(CustomerUcCompanyNameRequest request);
 
         CustomerResponse Create(CustomerAddRequest request);
         CustomerResponse Update(CustomerUpdateRequest request);

@@ -17,7 +17,7 @@ namespace Northwind.Data.Services
     #region Service
     /// <summary>Service class for the entity 'Supplier'.</summary>
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalAttributes 
-	// __LLBLGENPRO_USER_CODE_REGION_END                  
+	// __LLBLGENPRO_USER_CODE_REGION_END                    
     public partial class SupplierService : ServiceBase<Supplier, ISupplierServiceRepository>
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalInterfaces 
 	// __LLBLGENPRO_USER_CODE_REGION_END 
@@ -30,8 +30,6 @@ namespace Northwind.Data.Services
         partial void OnAfterPostSupplierDataTableRequest(SupplierDataTableRequest request, DataTableResponse response);
         partial void OnBeforeGetSupplierQueryCollectionRequest(SupplierQueryCollectionRequest request);
         partial void OnAfterGetSupplierQueryCollectionRequest(SupplierQueryCollectionRequest request, SupplierCollectionResponse response);
-        partial void OnBeforeGetSupplierUcSupplierNameRequest(SupplierUcSupplierNameRequest request);
-        partial void OnAfterGetSupplierUcSupplierNameRequest(SupplierUcSupplierNameRequest request, SupplierResponse response);
         partial void OnBeforeGetSupplierPkRequest(SupplierPkRequest request);
         partial void OnAfterGetSupplierPkRequest(SupplierPkRequest request, SupplierResponse response);
 
@@ -79,23 +77,6 @@ namespace Northwind.Data.Services
             return output;
         }
 
-
-        //Unique constraint request go first (the order matters in service stack)
-        //If the PK constraint was first, it could be used by ServiceStack instead
-        //of the UC route (this is how Route order is controlled)
-        /// <summary>Gets a specific 'Supplier' based on the 'UcSupplierName' unique constraint.</summary>
-        public SupplierResponse Get(SupplierUcSupplierNameRequest request)
-        {
-            if(Validator != null)
-                Validator.ValidateAndThrow(new Supplier { CompanyName = request.CompanyName }, "UcSupplierName");
-                
-            OnBeforeGetSupplierUcSupplierNameRequest(request);
-            var output = Repository.Fetch(request);
-            OnAfterGetSupplierUcSupplierNameRequest(request, output);
-            if (output.Result == null)
-                throw new HttpError(HttpStatusCode.NotFound, "NullReferenceException", "Supplier matching [CompanyName = {0}]  does not exist".Fmt(request.CompanyName));
-            return output;
-        }
 
 
         /// <summary>Gets a specific 'Supplier' based on it's primary key.</summary>
@@ -253,13 +234,6 @@ namespace Northwind.Data.Services
 
     }
 
-    [Route("/suppliers/uc/suppliername/{CompanyName}", Verbs = "GET")] // unique constraint filter
-    public partial class SupplierUcSupplierNameRequest : GetRequest<Supplier, SupplierResponse>
-    {
-        // unique constraint fields (that are not also primary key fields)
-        public System.String CompanyName { get; set; }
-
-    }
 
 
     [Route("/suppliers/{SupplierId}", Verbs = "GET")] // primary key filter
@@ -304,7 +278,7 @@ namespace Northwind.Data.Services
         public SupplierResponse(Supplier category) : base(category) { }
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcResponseAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
     }
 
     public partial class SupplierCollectionResponse : GetCollectionResponse<Supplier>
@@ -314,7 +288,7 @@ namespace Northwind.Data.Services
             base(collection, pageNumber, pageSize, totalItemCount){}
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcCollectionResponseAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
     }
     #endregion
 }

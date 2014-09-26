@@ -26,8 +26,6 @@ namespace Northwind.Data.ServiceRepositories
         partial void OnCreateRepository();
         partial void OnBeforeFetchShipperPkRequest(IDataAccessAdapter adapter, ShipperPkRequest request, ShipperEntity entity, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
         partial void OnAfterFetchShipperPkRequest(IDataAccessAdapter adapter, ShipperPkRequest request, ShipperEntity entity, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
-        partial void OnBeforeFetchShipperUcShipperNameRequest(IDataAccessAdapter adapter, ShipperUcShipperNameRequest request, ShipperEntity entity, IPredicateExpression predicate, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
-        partial void OnAfterFetchShipperUcShipperNameRequest(IDataAccessAdapter adapter, ShipperUcShipperNameRequest request, ShipperEntity entity, IPredicateExpression predicate, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
 
         partial void OnBeforeFetchShipperQueryCollectionRequest(IDataAccessAdapter adapter, ShipperQueryCollectionRequest request, SortExpression sortExpression, ExcludeIncludeFieldsList excludedIncludedFields, IPrefetchPath2 prefetchPath, IRelationPredicateBucket predicateBucket, int pageNumber, int pageSize, int limit);
         partial void OnAfterFetchShipperQueryCollectionRequest(IDataAccessAdapter adapter, ShipperQueryCollectionRequest request, EntityCollection<ShipperEntity> entities, SortExpression sortExpression, ExcludeIncludeFieldsList excludedIncludedFields, IPrefetchPath2 prefetchPath, IRelationPredicateBucket predicateBucket, int pageNumber, int pageSize, int limit, int totalItemCount);
@@ -184,29 +182,6 @@ namespace Northwind.Data.ServiceRepositories
             return response;            
         }
 
-        public ShipperResponse Fetch(ShipperUcShipperNameRequest request)
-        {
-            var entity = new ShipperEntity();
-            entity.CompanyName = request.CompanyName;
-
-            var excludedIncludedFields = RepositoryHelper.ConvertStringToExcludedIncludedFields(EntityType, request.Select);
-            var prefetchPath = RepositoryHelper.ConvertStringToPrefetchPath(EntityType, request.Include, request.Select);
-
-            using (var adapter = DataAccessAdapterFactory.NewDataAccessAdapter())
-            {
-                var ucPredicate = entity.ConstructFilterForUCCompanyName();
-                OnBeforeFetchShipperUcShipperNameRequest(adapter, request, entity, ucPredicate, prefetchPath, excludedIncludedFields);
-                
-                entity = base.Fetch(adapter, ucPredicate, prefetchPath, excludedIncludedFields, request.RCache);
-                if (entity != null)
-                {
-                    OnAfterFetchShipperUcShipperNameRequest(adapter, request, entity, ucPredicate, prefetchPath, excludedIncludedFields);
-                    return new ShipperResponse(entity.ToDto());
-                }
-            }
-            return new ShipperResponse(null);
-        }
-        
 
         public ShipperResponse Fetch(ShipperPkRequest request)
         {
@@ -295,10 +270,6 @@ namespace Northwind.Data.ServiceRepositories
                 if (map == null)
                 {
                     map = new Dictionary< string, IEntityField2[] >();
-                    map.Add("companyname", new IEntityField2[]
-                        {
-                            ShipperFields.CompanyName,                         
-                        });
                     CacheClient.Set(UcMapCacheKey, map);
                 }
                 return map;

@@ -1,8 +1,8 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 4.0
-// Code is generated on: Thursday, January 02, 2014 6:55:39 PM
+// Code is generated using LLBLGen Pro version: 4.2
+// Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates
 // Templates vendor: Solutions Design.
 // Templates version: 
@@ -239,16 +239,6 @@ namespace Northwind.Data.EntityClasses
 			// __LLBLGENPRO_USER_CODE_REGION_START GetObjectInfo
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			base.GetObjectData(info, context);
-		}
-
-		/// <summary> Method which will construct a filter (predicate expression) for the unique constraint defined on the fields:
-		/// CompanyName .</summary>
-		/// <returns>true if succeeded and the contents is read, false otherwise</returns>
-		public IPredicateExpression ConstructFilterForUCCompanyName()
-		{
-			IPredicateExpression filter = new PredicateExpression();
-			filter.Add(Northwind.Data.HelperClasses.ShipperFields.CompanyName == this.Fields.GetCurrentValue((int)ShipperFieldIndex.CompanyName));
- 			return filter;
 		}
 
 

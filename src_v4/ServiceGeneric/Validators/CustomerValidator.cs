@@ -41,11 +41,6 @@ namespace Northwind.Data.Validators
                     RuleFor(y => y.CustomerId).NotEmpty().Length(1, 5);
                 });
 
-            RuleSet("UcCompanyName", () =>
-                {
-                    RuleFor(y => y.CompanyName).NotEmpty().Length(1, 40);
-                });
-
             //Validation rules for POST requests (CREATE)
             RuleSet(ApplyTo.Post, () =>
                 {
@@ -79,7 +74,7 @@ namespace Northwind.Data.Validators
         }
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
 
     }
 }

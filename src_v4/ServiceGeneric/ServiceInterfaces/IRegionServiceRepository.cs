@@ -15,7 +15,6 @@ namespace Northwind.Data.ServiceInterfaces
         RegionCollectionResponse Fetch(RegionQueryCollectionRequest request);
         RegionResponse Fetch(RegionPkRequest request);
 
-        RegionResponse Fetch(RegionUcRegionDescriptionRequest request);
 
         RegionResponse Create(RegionAddRequest request);
         RegionResponse Update(RegionUpdateRequest request);

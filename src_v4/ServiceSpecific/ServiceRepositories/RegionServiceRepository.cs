@@ -26,8 +26,6 @@ namespace Northwind.Data.ServiceRepositories
         partial void OnCreateRepository();
         partial void OnBeforeFetchRegionPkRequest(IDataAccessAdapter adapter, RegionPkRequest request, RegionEntity entity, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
         partial void OnAfterFetchRegionPkRequest(IDataAccessAdapter adapter, RegionPkRequest request, RegionEntity entity, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
-        partial void OnBeforeFetchRegionUcRegionDescriptionRequest(IDataAccessAdapter adapter, RegionUcRegionDescriptionRequest request, RegionEntity entity, IPredicateExpression predicate, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
-        partial void OnAfterFetchRegionUcRegionDescriptionRequest(IDataAccessAdapter adapter, RegionUcRegionDescriptionRequest request, RegionEntity entity, IPredicateExpression predicate, IPrefetchPath2 prefetchPath, ExcludeIncludeFieldsList excludedIncludedFields);
 
         partial void OnBeforeFetchRegionQueryCollectionRequest(IDataAccessAdapter adapter, RegionQueryCollectionRequest request, SortExpression sortExpression, ExcludeIncludeFieldsList excludedIncludedFields, IPrefetchPath2 prefetchPath, IRelationPredicateBucket predicateBucket, int pageNumber, int pageSize, int limit);
         partial void OnAfterFetchRegionQueryCollectionRequest(IDataAccessAdapter adapter, RegionQueryCollectionRequest request, EntityCollection<RegionEntity> entities, SortExpression sortExpression, ExcludeIncludeFieldsList excludedIncludedFields, IPrefetchPath2 prefetchPath, IRelationPredicateBucket predicateBucket, int pageNumber, int pageSize, int limit, int totalItemCount);
@@ -183,29 +181,6 @@ namespace Northwind.Data.ServiceRepositories
             return response;            
         }
 
-        public RegionResponse Fetch(RegionUcRegionDescriptionRequest request)
-        {
-            var entity = new RegionEntity();
-            entity.RegionDescription = request.RegionDescription;
-
-            var excludedIncludedFields = RepositoryHelper.ConvertStringToExcludedIncludedFields(EntityType, request.Select);
-            var prefetchPath = RepositoryHelper.ConvertStringToPrefetchPath(EntityType, request.Include, request.Select);
-
-            using (var adapter = DataAccessAdapterFactory.NewDataAccessAdapter())
-            {
-                var ucPredicate = entity.ConstructFilterForUCRegionDescription();
-                OnBeforeFetchRegionUcRegionDescriptionRequest(adapter, request, entity, ucPredicate, prefetchPath, excludedIncludedFields);
-                
-                entity = base.Fetch(adapter, ucPredicate, prefetchPath, excludedIncludedFields, request.RCache);
-                if (entity != null)
-                {
-                    OnAfterFetchRegionUcRegionDescriptionRequest(adapter, request, entity, ucPredicate, prefetchPath, excludedIncludedFields);
-                    return new RegionResponse(entity.ToDto());
-                }
-            }
-            return new RegionResponse(null);
-        }
-        
 
         public RegionResponse Fetch(RegionPkRequest request)
         {
@@ -294,10 +269,6 @@ namespace Northwind.Data.ServiceRepositories
                 if (map == null)
                 {
                     map = new Dictionary< string, IEntityField2[] >();
-                    map.Add("regiondescription", new IEntityField2[]
-                        {
-                            RegionFields.RegionDescription,                         
-                        });
                     CacheClient.Set(UcMapCacheKey, map);
                 }
                 return map;

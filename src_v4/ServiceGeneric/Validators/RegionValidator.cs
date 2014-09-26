@@ -41,11 +41,6 @@ namespace Northwind.Data.Validators
                     RuleFor(y => y.RegionId).GreaterThanOrEqualTo(1);
                 });
 
-            RuleSet("UcRegionDescription", () =>
-                {
-                    RuleFor(y => y.RegionDescription).NotEmpty().Length(1, 50);
-                });
-
             //Validation rules for POST requests (CREATE)
             RuleSet(ApplyTo.Post, () =>
                 {
@@ -70,7 +65,7 @@ namespace Northwind.Data.Validators
         }
         
 	// __LLBLGENPRO_USER_CODE_REGION_START SsSvcAdditionalMethods 
-	// __LLBLGENPRO_USER_CODE_REGION_END                                   
+	// __LLBLGENPRO_USER_CODE_REGION_END                                       
 
     }
 }

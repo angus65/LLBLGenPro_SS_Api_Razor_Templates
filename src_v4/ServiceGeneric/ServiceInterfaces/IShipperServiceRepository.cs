@@ -15,7 +15,6 @@ namespace Northwind.Data.ServiceInterfaces
         ShipperCollectionResponse Fetch(ShipperQueryCollectionRequest request);
         ShipperResponse Fetch(ShipperPkRequest request);
 
-        ShipperResponse Fetch(ShipperUcShipperNameRequest request);
 
         ShipperResponse Create(ShipperAddRequest request);
         ShipperResponse Update(ShipperUpdateRequest request);
